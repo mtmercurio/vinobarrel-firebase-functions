@@ -10,7 +10,6 @@ exports.createUserDoc = functions.auth.user().onCreate(async (user) => {
   return await admin.firestore().doc(`users/${user.uid}`).set(account);
 });
 
-
 exports.addTestTransactions = functions.pubsub.schedule("every day 1046").onRun(async (context) => {
   const wines = ["Sauvignon Blanc", "Pinot Noir", "Cabernet Sauvignon", "Zinfandel", "Pinot Grigio", "Chardonnay"];
   const kegIds = ["red", "green"];
