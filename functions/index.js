@@ -10,7 +10,7 @@ exports.createUserDoc = functions.auth.user().onCreate(async (user) => {
   return await admin.firestore().doc(`users/${user.uid}`).set(account);
 });
 
-exports.addTestTransactions = functions.pubsub.schedule("every day 1046").onRun(async (context) => {
+exports.addTestTransactions = functions.pubsub.schedule("every day 1100").onRun(async (context) => {
   const wines = ["Sauvignon Blanc", "Pinot Noir", "Cabernet Sauvignon", "Zinfandel", "Pinot Grigio", "Chardonnay"];
   const kegIds = ["red", "green"];
   const pourTypes = [{type: "small", size: 1.5, price: 3.50}, {type: "full", size: 5, price: 9.00}];
