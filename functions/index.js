@@ -7,26 +7,11 @@ exports.createUserDoc = functions.auth.user().onCreate(async (user) => {
     uid: user.uid,
     email: user.email,
   };
-  return await admin.firestore().doc(`users/${user.uid}`).set(account);
+  await admin.firestore().doc(`users/${user.uid}`).set(account);
 });
 
-exports.addTestTransactions = functions.pubsub.schedule("every day 1100").onRun(async (context) => {
-  const wines = ["Sauvignon Blanc", "Pinot Noir", "Cabernet Sauvignon", "Zinfandel", "Pinot Grigio", "Chardonnay"];
-  const kegIds = ["red", "green"];
-  const pourTypes = [{type: "small", size: 1.5, price: 3.50}, {type: "full", size: 5, price: 9.00}];
-  const timeDiff = getRandomInt(1, 11);
-  for (let i = 0; i < 50; i++) {
-    const pourType = pourTypes[getRandomInt(0, pourTypes.length)];
-    await admin.firestore().collection("users/P0PAnXQ77PeBIFUtgnNsnHXN5J52/transactions").add({
-      glass_id: "1",
-      kegId: kegIds[getRandomInt(0, kegIds.length)],
-      name: wines[getRandomInt(0, wines.length)],
-      ouncesPoured: pourType.size,
-      pourType: pourType.type,
-      price: pourType.price,
-      timestamp: admin.firestore.Timestamp.fromDate(getDateTime(timeDiff * i)),
-    });
-  }
+exports.addTestTransactions = functions.pubsub.schedule("every 24 hours").onRun(async (context) => {
+  await addTransactions("P0PAnXQ77PeBIFUtgnNsnHXN5J52");
 });
 
 /**
@@ -47,5 +32,28 @@ function getRandomInt(min, max) {
  * @return {int} date with minutes added
  */
 function getDateTime(minutes) {
-  return new Date(Date.now() + minutes * 60000);
+  return new Date(Date.now() - (minutes * 60000));
+}
+
+/**
+ * Transactions to userId
+ * @param {string} userId to add transactions to
+ */
+async function addTransactions(userId) {
+  const wines = ["Sauvignon Blanc", "Pinot Noir", "Cabernet Sauvignon", "Zinfandel", "Pinot Grigio", "Chardonnay"];
+  const kegIds = ["red", "green"];
+  const pourTypes = [{type: "small", size: 1.5, price: 3.50}, {type: "full", size: 5, price: 9.00}];
+  const timeDiff = getRandomInt(1, 11);
+  for (let i = 0; i < 50; i++) {
+    const pourType = pourTypes[getRandomInt(0, pourTypes.length)];
+    await admin.firestore().collection("users/"+userId+"/transactions").add({
+      glass_id: "1",
+      kegId: kegIds[getRandomInt(0, kegIds.length)],
+      name: wines[getRandomInt(0, wines.length)],
+      ouncesPoured: pourType.size,
+      pourType: pourType.type,
+      price: pourType.price,
+      timestamp: getDateTime(timeDiff * i),
+    });
+  }
 }
