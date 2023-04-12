@@ -27,7 +27,7 @@ function getRandomInt(min, max) {
 }
 
 /**
- * Adds minutes to current date
+ * Subtracts minutes to current datetime
  * @param {int} minutes minutes to add.
  * @return {int} date with minutes added
  */
