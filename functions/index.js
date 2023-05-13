@@ -6,6 +6,7 @@ exports.createUserDoc = functions.auth.user().onCreate(async (user) => {
   const account = {
     uid: user.uid,
     email: user.email,
+    role: "admin",
   };
   await admin.firestore().doc(`users/${user.uid}`).set(account);
 });
