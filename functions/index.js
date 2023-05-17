@@ -12,7 +12,7 @@ exports.createUserDoc = functions.auth.user().onCreate(async (user) => {
 });
 
 exports.addTestTransactions = functions.pubsub.schedule("every 24 hours").onRun(async (context) => {
-  await addTransactions("P0PAnXQ77PeBIFUtgnNsnHXN5J52");
+  await addTransactions("fM1KytDljdTec5PKoGlK");
 });
 
 /**
@@ -38,16 +38,16 @@ function getDateTime(minutes) {
 
 /**
  * Transactions to userId
- * @param {string} userId to add transactions to
+ * @param {string} locationId to add transactions to
  */
-async function addTransactions(userId) {
+async function addTransactions(locationId) {
   const wines = ["Sauvignon Blanc", "Pinot Noir", "Cabernet Sauvignon", "Zinfandel", "Pinot Grigio", "Chardonnay"];
   const kegIds = ["red", "green"];
   const pourTypes = [{type: "small", size: 1.5, price: 3.50}, {type: "full", size: 5, price: 9.00}];
   const timeDiff = getRandomInt(1, 11);
   for (let i = 0; i < 50; i++) {
     const pourType = pourTypes[getRandomInt(0, pourTypes.length)];
-    await admin.firestore().collection("users/"+userId+"/transactions").add({
+    await admin.firestore().collection("locations/"+locationId+"/transactions").add({
       glass_id: "1",
       kegId: kegIds[getRandomInt(0, kegIds.length)],
       name: wines[getRandomInt(0, wines.length)],
